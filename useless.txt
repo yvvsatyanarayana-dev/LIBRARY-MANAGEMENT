@@ -1,0 +1,42 @@
+self.master.grid_columnconfigure(0,weight=1)
+        self.master.grid_rowconfigure(0,weight=1)
+        self.master.grid_columnconfigure(4,weight=1)
+        self.master.grid_rowconfigure(1,weight=1)
+        self.back_frame = ctk.CTkFrame(
+            self.back_frame,
+            corner_radius=10,
+            fg_color="#31493c"
+        )
+        self.back_frame.grid(row=0,column=0,sticky='nsew',pady=15,padx=15,columnspan=4,rowspan=2)
+        self.back_frame.grid_columnconfigure(0,weight=1)
+        self.back_frame.grid_columnconfigure(1,weight=1)
+        self.back_frame.grid_columnconfigure(2,weight=1)
+        self.back_frame.grid_columnconfigure(3,weight=1)
+        self.back_frame.grid_rowconfigure(0,weight=1)
+        self.back_frame.grid_rowconfigure(1,weight=1)
+        self.std_rec_label = ctk.CTkLabel(
+            self.back_frame,
+            text="STUDENTS RECORDS",
+            text_color="white",
+            font=("Segeo UI",15,"bold")
+        )
+        self.std_rec_label.grid(row=0,column=0,sticky='wn',pady=15,padx=15)
+
+
+
+        for widgets in self.main_frame.winfo_children():
+            widgets.destroy()
+        #     self.main_frame.destroy()
+        # self.std_main_frame = ctk.CTkFrame(
+        #     self.back_frame,
+        #     fg_color="#001a23",
+        #     corner_radius=30
+        # )
+        # self.std_main_frame.grid(row=0, column=1, sticky="nsew", padx=10, pady=10)
+        # self.std_main_frame.grid_rowconfigure(0,weight=1)
+        # self.std_main_frame.grid_rowconfigure(1,weight=1)
+        # self.std_main_frame.grid_columnconfigure(0,weight=1)
+        # self.std_main_frame.grid_columnconfigure(1,weight=1)
+        # self.std_main_frame.grid_columnconfigure(2,weight=1)
+        # self.std_main_frame.grid_columnconfigure(3,weight=1)
+        StudentRecord(self.main_frame)
