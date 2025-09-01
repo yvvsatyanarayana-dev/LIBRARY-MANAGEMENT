@@ -10,6 +10,7 @@ class Database:
             user="root",
             password="SRIMAHAVISHNU@V",
             database="lib",
+            auth_plugin='mysql_native_password'  # Add this line
         )
 
     @staticmethod

@@ -8,7 +8,7 @@ from Database import Database
 from StudentsRecords import StudentRecord
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-import requests
+import reques s
 from CTkMessagebox import CTkMessagebox
 import random as rand
 from Books import Books
@@ -25,17 +25,6 @@ class Dashboard(ctk.CTkToplevel):
         self.grid_columnconfigure(0, weight=1)
         self.request = self.quotes_req()
         self.create_widgets()
-    #     self.after(0,self.dashboard_content)
-    #     threading.Thread(target=self.load_data, daemon=True).start()
-
-    # def load_data(self):  # Added method
-    #     # Fetch quote
-    #     self.quote = self.quotes_req()
-    #     # Fetch database data
-    #     self.student_data = Database.students_per_group()
-    #     self.total_books = Database.total_books()
-    #     # Update the dashboard content on the main thread
-    #     self.after(0, self.dashboard_content)
 
     def create_widgets(self):
         self.images()
@@ -179,6 +168,7 @@ class Dashboard(ctk.CTkToplevel):
             hover_color="#2e3532",
             fg_color="#31493c",#2e3532
             cursor="hand2",
+            command=self.transactions
         )
         self.transaction_btn.grid(row=5, column=0, padx=10, pady=(20, 0), sticky="w")
 
@@ -193,6 +183,7 @@ class Dashboard(ctk.CTkToplevel):
             hover_color="#2e3532",
             fg_color="#31493c",#2e3532
             cursor="hand2",
+            command=self.reports
         )
         self.reports_btn.grid(row=6, column=0, padx=10, pady=(20, 0), sticky="w")
 
@@ -207,6 +198,7 @@ class Dashboard(ctk.CTkToplevel):
             hover_color="#2e3532",
             fg_color="#31493c",#2e3532
             cursor="hand2",
+            command=self.mailing
         )
         self.mailing_btn.grid(row=7, column=0, padx=10, pady=(20, 0), sticky="w")
 
@@ -221,23 +213,9 @@ class Dashboard(ctk.CTkToplevel):
             hover_color="#2e3532",
             fg_color="#31493c",#2e3532
             cursor="hand2",
+            command=self.modifications,
         )
         self.modification_btn.grid(row=8,column=0,padx=10, pady=(20, 0), sticky="w")
-
-        # #Modification button
-        # self.modification_btn = ctk.CTkButton(
-        #     self.menu_frame,
-        #     text='MODIFICATION',
-        #     image=self.modification_img,
-        #     corner_radius=20,
-        #     width=180,
-        #     font=("Segoe UI", 10, "bold"),
-        #     hover_color="#2e3532",
-        #     fg_color="#31493c",#2e3532
-        #     cursor="hand2",
-        # )
-        # self.modification_btn.grid(row=7,column=0,padx=10, pady=(20, 0), sticky="w")
-
 
         # Logout Button
         self.logout_btn = ctk.CTkButton(
@@ -261,7 +239,6 @@ class Dashboard(ctk.CTkToplevel):
             corner_radius=10
         )
         self.main_frame.grid(row=0, column=1, sticky="nsew", padx=10, pady=10)
-
         self.dashboard_content()
 
     def dashboard_content(self):
