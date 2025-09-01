@@ -8,7 +8,7 @@ from Database import Database
 from StudentsRecords import StudentRecord
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-import reques s
+import requests
 from CTkMessagebox import CTkMessagebox
 import random as rand
 from Books import Books
@@ -168,7 +168,6 @@ class Dashboard(ctk.CTkToplevel):
             hover_color="#2e3532",
             fg_color="#31493c",#2e3532
             cursor="hand2",
-            command=self.transactions
         )
         self.transaction_btn.grid(row=5, column=0, padx=10, pady=(20, 0), sticky="w")
 
@@ -198,7 +197,6 @@ class Dashboard(ctk.CTkToplevel):
             hover_color="#2e3532",
             fg_color="#31493c",#2e3532
             cursor="hand2",
-            command=self.mailing
         )
         self.mailing_btn.grid(row=7, column=0, padx=10, pady=(20, 0), sticky="w")
 
@@ -213,7 +211,6 @@ class Dashboard(ctk.CTkToplevel):
             hover_color="#2e3532",
             fg_color="#31493c",#2e3532
             cursor="hand2",
-            command=self.modifications,
         )
         self.modification_btn.grid(row=8,column=0,padx=10, pady=(20, 0), sticky="w")
 
