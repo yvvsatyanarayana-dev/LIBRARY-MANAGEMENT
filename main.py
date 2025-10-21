@@ -23,7 +23,8 @@ class App(ctk.CTk):
             else:
                 application_path = os.path.dirname(os.path.abspath(__file__))
 
-            icon_path = os.path.join(application_path, "Assets/Ideal-College.ico")
+            icon_path = os.path.join(
+                application_path, "Assets/Ideal-College.ico")
             self.iconbitmap(icon_path)
         except:
             pass
@@ -31,17 +32,18 @@ class App(ctk.CTk):
         self.center()
 
     def center(self):
+        # FIXED: Proper center calculation
         screen_width = self.winfo_screenwidth()
         screen_height = self.winfo_screenheight()
-        window_width = self.winfo_width()
-        window_height = self.winfo_height()
-        center_x = int((screen_width / 1.7) - (window_width / 8))
-        center_y = int((screen_height / 2) - (window_height / 4))
-        self.geometry(f"+{center_x}+{center_y}")
+        window_width = 400
+        window_height = 550
+        center_x = (screen_width - window_width) // 2
+        center_y = (screen_height - window_height) // 2
+        self.geometry(f"{window_width}x{window_height}+{center_x}+{center_y}")
 
     def create_widgets(self):
         self.load_images()
-        
+
         # Configure main window grid
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=0)  # Logo row
@@ -82,9 +84,10 @@ class App(ctk.CTk):
             self.login_frame,
             text="Username",
             text_color="white",
-            font=("Sans serif", 15, "bold"),
+            font=("Segoe UI", 15, "bold"),  # Fixed font consistency
         )
-        self.username_label.grid(row=1, column=0, pady=(10, 0), sticky="w", padx=30)
+        self.username_label.grid(
+            row=1, column=0, pady=(10, 0), sticky="w", padx=30)
 
         # Username entry
         self.username_enty = ctk.CTkEntry(
@@ -95,18 +98,20 @@ class App(ctk.CTk):
             text_color="white",
             height=35,
             corner_radius=20,
-            font=("Segeo UI", 15, "bold"),
+            font=("Segoe UI", 15, "bold"),  # Fixed font consistency
         )
-        self.username_enty.grid(row=2, column=0, padx=30, pady=(5, 10), sticky="ew")
+        self.username_enty.grid(row=2, column=0, padx=30,
+                                pady=(5, 10), sticky="ew")
 
         # Password label
         self.password_label = ctk.CTkLabel(
             self.login_frame,
             text="Password",
             text_color="white",
-            font=("Sans serif", 15, "bold"),
+            font=("Segoe UI", 15, "bold"),  # Fixed font consistency
         )
-        self.password_label.grid(row=3, column=0, pady=(10, 0), sticky="w", padx=30)
+        self.password_label.grid(
+            row=3, column=0, pady=(10, 0), sticky="w", padx=30)
 
         # Password entry
         self.password_entry = ctk.CTkEntry(
@@ -118,9 +123,10 @@ class App(ctk.CTk):
             height=35,
             corner_radius=20,
             show="*",
-            font=("Segeo UI", 15, "bold"),
+            font=("Segoe UI", 15, "bold"),  # Fixed font consistency
         )
-        self.password_entry.grid(row=4, column=0, padx=30, pady=(5, 10), sticky="ew")
+        self.password_entry.grid(
+            row=4, column=0, padx=30, pady=(5, 10), sticky="ew")
 
         # Login button with increased bottom padding
         self.login_btn = ctk.CTkButton(
@@ -130,7 +136,7 @@ class App(ctk.CTk):
             hover_color="#a4133c",
             cursor="hand2",
             width=230,
-            font=("Sans serif", 15, "bold"),
+            font=("Segoe UI", 15, "bold"),  # Fixed font consistency
             height=35,
             corner_radius=20,
             command=self.authentication,
@@ -143,7 +149,8 @@ class App(ctk.CTk):
         if Database.authenticate(username, password):
             self.withdraw()
             self.dashboard_window = Dashboard(self)
-            self.dashboard_window.protocol("WM_DELETE_WINDOW", self.on_dashboard_close)
+            self.dashboard_window.protocol(
+                "WM_DELETE_WINDOW", self.on_dashboard_close)
         else:
             CTkMessagebox(
                 title="Info",
