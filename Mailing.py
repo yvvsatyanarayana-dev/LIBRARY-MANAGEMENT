@@ -18,7 +18,6 @@ class Mailing(ctk.CTkFrame):
         self.create_widgets()
 
     def setup_email_config(self):
-        """Email configuration - update these with your SMTP settings"""
         self.smtp_config = {
             "server": "smtp.gmail.com",
             "port": 587,
@@ -59,7 +58,6 @@ class Mailing(ctk.CTkFrame):
         self.setup_reminder_tab()
 
     def setup_manual_email_tab(self):
-        """Setup the manual email composition tab"""
         # Configure tab grid
         self.manual_tab.grid_columnconfigure(0, weight=1)
 
@@ -109,7 +107,8 @@ class Mailing(ctk.CTkFrame):
         ).pack(side="left", padx=10)
 
         # Group selection
-        self.group_frame = ctk.CTkFrame(self.manual_tab, fg_color="transparent")
+        self.group_frame = ctk.CTkFrame(
+            self.manual_tab, fg_color="transparent")
         self.group_frame.grid(row=2, column=0, sticky="w", padx=20, pady=5)
         self.group_frame.grid_remove()
 
@@ -131,12 +130,15 @@ class Mailing(ctk.CTkFrame):
             fg_color="#001a23",  # Your dark color
             button_color="#31493c",  # Your green
             button_hover_color="#1b3430",  # Your dark green
+            text_color="white",
         )
         self.group_dropdown.pack(side="left", padx=10)
 
         # Individual student selection
-        self.individual_frame = ctk.CTkFrame(self.manual_tab, fg_color="transparent")
-        self.individual_frame.grid(row=3, column=0, sticky="w", padx=20, pady=5)
+        self.individual_frame = ctk.CTkFrame(
+            self.manual_tab, fg_color="transparent")
+        self.individual_frame.grid(
+            row=3, column=0, sticky="w", padx=20, pady=5)
         self.individual_frame.grid_remove()
 
         ctk.CTkLabel(
@@ -225,7 +227,8 @@ class Mailing(ctk.CTkFrame):
             text_color="white",
         ).grid(row=8, column=0, sticky="w", padx=20, pady=(20, 5))
 
-        self.sender_email_var = ctk.StringVar(value=self.smtp_config["username"])
+        self.sender_email_var = ctk.StringVar(
+            value=self.smtp_config["username"])
         self.sender_entry = ctk.CTkEntry(
             self.manual_tab,
             textvariable=self.sender_email_var,
@@ -266,7 +269,8 @@ class Mailing(ctk.CTkFrame):
         self.send_btn.pack(side="left", padx=10)
 
         # Progress
-        self.progress_frame = ctk.CTkFrame(self.manual_tab, fg_color="transparent")
+        self.progress_frame = ctk.CTkFrame(
+            self.manual_tab, fg_color="transparent")
         self.progress_frame.grid(row=11, column=0, pady=10)
         self.progress_frame.grid_remove()
 
@@ -290,7 +294,6 @@ class Mailing(ctk.CTkFrame):
         self.recipient_var.trace("w", self.on_recipient_change)
 
     def setup_reminder_tab(self):
-        """Setup the overdue reminders tab"""
         # Configure tab grid
         self.reminder_tab.grid_columnconfigure(0, weight=1)
 
@@ -315,7 +318,8 @@ class Mailing(ctk.CTkFrame):
             self.reminder_tab,
             fg_color="#001a23",  # Your dark color
         )
-        self.overdue_list_frame.grid(row=2, column=0, sticky="nsew", padx=20, pady=10)
+        self.overdue_list_frame.grid(
+            row=2, column=0, sticky="nsew", padx=20, pady=10)
         self.overdue_list_frame.grid_columnconfigure(0, weight=1)
 
         # Load overdue books
@@ -373,7 +377,6 @@ class Mailing(ctk.CTkFrame):
         self.reminder_progress_bar.set(0)
 
     def load_overdue_books(self):
-        """Load and display overdue books"""
         try:
             # Clear existing widgets
             for widget in self.overdue_list_frame.winfo_children():
@@ -436,7 +439,6 @@ class Mailing(ctk.CTkFrame):
             )
 
     def get_overdue_books(self) -> List[Tuple]:
-        """Get list of overdue books with student information - using your Database class"""
         try:
             # Use your existing Database class methods
             conn = Database.connect()
@@ -471,7 +473,6 @@ class Mailing(ctk.CTkFrame):
             return []
 
     def get_student_groups(self):
-        """Get unique student groups from database - using your Database class"""
         try:
             conn = Database.connect()
             cursor = conn.cursor()
@@ -486,7 +487,6 @@ class Mailing(ctk.CTkFrame):
             return ["Error loading groups"]
 
     def on_recipient_change(self, *args):
-        """Show/hide appropriate frames based on recipient selection"""
         recipient_type = self.recipient_var.get()
 
         # Hide all frames first
@@ -500,7 +500,6 @@ class Mailing(ctk.CTkFrame):
             self.individual_frame.grid()
 
     def check_student(self):
-        """Check if student exists and get their email - using your Database class"""
         roll_no = self.student_roll_var.get().strip()
         if not roll_no:
             CTkMessagebox(
@@ -574,17 +573,12 @@ class Mailing(ctk.CTkFrame):
             return []
 
     def is_valid_email(self, email):
-        """Basic email validation"""
         if not email or not isinstance(email, str):
             return False
         pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
         return re.match(pattern, email.strip()) is not None
 
-    # ... (rest of the methods remain the same - preview_email, preview_reminder_email, generate_overdue_message, show_preview_window, send_email, send_overdue_reminders, _send_emails_thread, _send_overdue_reminders_thread)
-    # These methods don't need changes as they don't contain database operations
-
     def preview_email(self):
-        """Show email preview"""
         recipients = self.get_recipient_emails()
         subject = self.subject_var.get().strip()
         message = self.message_text.get("1.0", "end-1c").strip()
@@ -624,7 +618,6 @@ class Mailing(ctk.CTkFrame):
         self.show_preview_window("Email Preview", preview_text)
 
     def preview_reminder_email(self):
-        """Preview overdue reminder email"""
         overdue_books = self.get_overdue_books()
 
         if not overdue_books:
@@ -664,7 +657,6 @@ class Mailing(ctk.CTkFrame):
     def generate_overdue_message(
         self, student_name: str, book_title: str, due_date: str, days_overdue: int
     ) -> str:
-        """Generate overdue reminder message"""
         return f"""Dear {student_name},
 
 This is a reminder from the Library Management System regarding your overdue book.
@@ -775,7 +767,8 @@ Ideal College of Arts & Sciences"""
 
         confirm = CTkMessagebox(
             title="Confirm Send",
-            message=f"Send overdue reminders to {len(overdue_books)} student(s)?",
+            message=f"Send overdue reminders to {
+                len(overdue_books)} student(s)?",
             icon="question",
             option_1="Cancel",
             option_2="Send",
@@ -787,7 +780,8 @@ Ideal College of Arts & Sciences"""
         # Start sending in separate thread
         self.reminder_progress_frame.grid()
         self.reminder_progress_bar.set(0)
-        self.reminder_progress_label.configure(text="Preparing to send reminders...")
+        self.reminder_progress_label.configure(
+            text="Preparing to send reminders...")
 
         threading.Thread(
             target=self._send_overdue_reminders_thread,
@@ -796,13 +790,14 @@ Ideal College of Arts & Sciences"""
         ).start()
 
     def _send_emails_thread(self, recipients, subject, message, sender_email):
-        """Thread function for sending emails"""
         try:
             self.smtp_config["username"] = sender_email
 
-            server = smtplib.SMTP(self.smtp_config["server"], self.smtp_config["port"])
+            server = smtplib.SMTP(
+                self.smtp_config["server"], self.smtp_config["port"])
             server.starttls()
-            server.login(self.smtp_config["username"], self.smtp_config["password"])
+            server.login(self.smtp_config["username"],
+                         self.smtp_config["password"])
 
             total_recipients = len(recipients)
             successful_sends = 0
@@ -813,11 +808,13 @@ Ideal College of Arts & Sciences"""
                     progress = i / total_recipients
                     self.progress_bar.set(progress)
                     self.progress_label.configure(
-                        text=f"Sending to {name}... ({i + 1}/{total_recipients})"
+                        text=f"Sending to {
+                            name}... ({i + 1}/{total_recipients})"
                     )
 
                     msg = MIMEMultipart()
-                    msg["From"] = f"{self.smtp_config['from_name']} <{sender_email}>"
+                    msg["From"] = f"{self.smtp_config['from_name']} <{
+                        sender_email}>"
                     msg["To"] = email
                     msg["Subject"] = subject
 
@@ -842,7 +839,8 @@ Ideal College of Arts & Sciences"""
                     result_message += f"• {name} ({email}): {error}\n"
 
             self.progress_label.configure(text=result_message)
-            CTkMessagebox(title="Send Complete", message=result_message, icon="info")
+            CTkMessagebox(title="Send Complete",
+                          message=result_message, icon="info")
 
         except Exception as e:
             self.progress_label.configure(text=f"❌ Error: {str(e)}")
@@ -853,13 +851,14 @@ Ideal College of Arts & Sciences"""
             )
 
     def _send_overdue_reminders_thread(self, overdue_books):
-        """Thread function for sending overdue reminders"""
         try:
             sender_email = self.smtp_config["username"]
 
-            server = smtplib.SMTP(self.smtp_config["server"], self.smtp_config["port"])
+            server = smtplib.SMTP(
+                self.smtp_config["server"], self.smtp_config["port"])
             server.starttls()
-            server.login(self.smtp_config["username"], self.smtp_config["password"])
+            server.login(self.smtp_config["username"],
+                         self.smtp_config["password"])
 
             total_recipients = len(overdue_books)
             successful_sends = 0
@@ -888,13 +887,15 @@ Ideal College of Arts & Sciences"""
                     )
 
                     msg = MIMEMultipart()
-                    msg["From"] = f"{self.smtp_config['from_name']} <{sender_email}>"
+                    msg["From"] = f"{self.smtp_config['from_name']} <{
+                        sender_email}>"
                     msg["To"] = student_email
                     msg["Subject"] = subject
 
                     msg.attach(MIMEText(message, "plain"))
 
-                    server.sendmail(sender_email, student_email, msg.as_string())
+                    server.sendmail(
+                        sender_email, student_email, msg.as_string())
                     successful_sends += 1
 
                 except Exception as e:
@@ -904,7 +905,8 @@ Ideal College of Arts & Sciences"""
             self.reminder_progress_bar.set(1.0)
 
             result_message = (
-                f"✅ Successfully sent reminders: {successful_sends}/{total_recipients}"
+                f"✅ Successfully sent reminders: {
+                    successful_sends}/{total_recipients}"
             )
             if failed_sends:
                 result_message += f"\n\n❌ Failed sends:\n"
@@ -912,7 +914,8 @@ Ideal College of Arts & Sciences"""
                     result_message += f"• {name} ({email}): {error}\n"
 
             self.reminder_progress_label.configure(text=result_message)
-            CTkMessagebox(title="Reminders Sent", message=result_message, icon="info")
+            CTkMessagebox(title="Reminders Sent",
+                          message=result_message, icon="info")
 
         except Exception as e:
             self.reminder_progress_label.configure(text=f"❌ Error: {str(e)}")

@@ -733,9 +733,3 @@ class Dashboard(ctk.CTkToplevel):
             '"Time waits for no one." - Geoffrey Chaucer',
         ]
         return rand.choice(education_quotes)
-
-
-if __name__ == "__main__":
-    app = ctk.CTk()
-    dashboard = Dashboard(app)
-    app.mainloop()
