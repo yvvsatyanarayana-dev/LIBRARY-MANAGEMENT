@@ -1,5 +1,6 @@
 import customtkinter as ctk
 import os
+import sys
 from PIL import Image
 import datetime
 from Database import Database
@@ -15,6 +16,15 @@ from Reports import Reports
 from Mailing import Mailing
 
 
+def resource_path(relative_path):
+    """Get absolute path to resource, works for dev and PyInstaller"""
+    try:
+        base_path = sys._MEIPASS  # Temp folder for bundled assets
+    except AttributeError:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
+
+
 class Dashboard(ctk.CTkToplevel):
     ctk.set_appearance_mode("light")
 
@@ -22,21 +32,21 @@ class Dashboard(ctk.CTkToplevel):
         super().__init__(parent)
         self.title("DASHBOARD")
         self.geometry("1200x700")
-        
+
         # FIXED 1: ENSURE WINDOW DECORATIONS ARE VISIBLE
         self.overrideredirect(False)
         self.attributes("-topmost", False)
-        
+
         # FIXED 2: PROPERLY MAXIMIZE WINDOW
         self._maximize_window()
-        
+
         # SET ICON
         self._set_window_icon()
-        
+
         # CONFIGURE GRID
         self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(0, weight=1)
-        
+
         # INITIALIZE
         self.request = self.quotes_req()
         self.create_widgets()
@@ -45,11 +55,11 @@ class Dashboard(ctk.CTkToplevel):
         """FIXED: Maximize window properly with decorations"""
         try:
             # Method 1: Windows - state('zoomed')
-            self.state('zoomed')
+            self.state("zoomed")
         except:
             try:
                 # Method 2: Cross-platform attributes
-                self.attributes('-zoomed', True)
+                self.attributes("-zoomed", True)
             except:
                 try:
                     # Method 3: Manual full screen sizing
@@ -66,7 +76,7 @@ class Dashboard(ctk.CTkToplevel):
 
     def _set_window_icon(self):
         """Set window icon with proper error handling"""
-        icon_path = os.path.abspath("Assets/Ideal-College.ico")
+        icon_path = resource_path("Assets/Ideal-College.ico")
         if os.path.exists(icon_path):
             try:
                 self.iconbitmap(icon_path)
@@ -75,6 +85,7 @@ class Dashboard(ctk.CTkToplevel):
                 try:
                     img = Image.open(icon_path)
                     from PIL import ImageTk
+
                     photo = ImageTk.PhotoImage(img)
                     self.wm_iconphoto(True, photo)
                 except Exception as e2:
@@ -92,7 +103,8 @@ class Dashboard(ctk.CTkToplevel):
             height=60,
             corner_radius=10,
         )
-        self.header_frame.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
+        self.header_frame.grid(
+            row=0, column=0, sticky="nsew", padx=10, pady=10)
         self.header_frame.grid_columnconfigure(1, weight=1)
 
         # College Name
@@ -107,7 +119,9 @@ class Dashboard(ctk.CTkToplevel):
         # Date Time
         self.date_time = ctk.CTkLabel(
             self.header_frame,
-            text=f"{datetime.datetime.now().strftime('%d/%m/%Y')} {datetime.datetime.now().strftime('%H:%M:%S')}",
+            text=f"{datetime.datetime.now().strftime('%d/%m/%Y')} {
+                datetime.datetime.now().strftime('%H:%M:%S')
+            }",
             font=("Segoe UI", 12, "bold"),
             text_color="white",
         )
@@ -119,7 +133,8 @@ class Dashboard(ctk.CTkToplevel):
             fg_color="#31493c",
             corner_radius=10,
         )
-        self.back_frame.grid(row=1, column=0, sticky="nsew", padx=10, pady=(10, 10))
+        self.back_frame.grid(row=1, column=0, sticky="nsew",
+                             padx=10, pady=(10, 10))
         self.back_frame.grid_rowconfigure(0, weight=1)
         self.back_frame.grid_columnconfigure(1, weight=1)
 
@@ -155,7 +170,8 @@ class Dashboard(ctk.CTkToplevel):
             width=180,
             command=self.dashboard_content,
         )
-        self.dashboard_btn.grid(row=1, column=0, padx=10, pady=(30, 0), sticky="w")
+        self.dashboard_btn.grid(row=1, column=0, padx=10,
+                                pady=(30, 0), sticky="w")
 
         # Student Record Button
         self.student_rec = ctk.CTkButton(
@@ -171,7 +187,8 @@ class Dashboard(ctk.CTkToplevel):
             width=180,
             command=self.students_records,
         )
-        self.student_rec.grid(row=2, column=0, padx=10, pady=(20, 0), sticky="w")
+        self.student_rec.grid(row=2, column=0, padx=10,
+                              pady=(20, 0), sticky="w")
 
         # Books Button
         self.book_btn = ctk.CTkButton(
@@ -203,7 +220,8 @@ class Dashboard(ctk.CTkToplevel):
             cursor="hand2",
             command=self.issue_return_func,
         )
-        self.issue_re_btn.grid(row=4, column=0, padx=10, pady=(20, 0), sticky="w")
+        self.issue_re_btn.grid(row=4, column=0, padx=10,
+                               pady=(20, 0), sticky="w")
 
         # Transaction Button
         self.transaction_btn = ctk.CTkButton(
@@ -219,7 +237,8 @@ class Dashboard(ctk.CTkToplevel):
             cursor="hand2",
             command=self.transaction_func,
         )
-        self.transaction_btn.grid(row=5, column=0, padx=10, pady=(20, 0), sticky="w")
+        self.transaction_btn.grid(
+            row=5, column=0, padx=10, pady=(20, 0), sticky="w")
 
         # Reports Button
         self.reports_btn = ctk.CTkButton(
@@ -234,7 +253,8 @@ class Dashboard(ctk.CTkToplevel):
             cursor="hand2",
             command=self.reports_func,
         )
-        self.reports_btn.grid(row=6, column=0, padx=10, pady=(20, 0), sticky="w")
+        self.reports_btn.grid(row=6, column=0, padx=10,
+                              pady=(20, 0), sticky="w")
 
         # Mailing Button
         self.mailing_btn = ctk.CTkButton(
@@ -249,7 +269,8 @@ class Dashboard(ctk.CTkToplevel):
             cursor="hand2",
             command=self.mailing_func,
         )
-        self.mailing_btn.grid(row=7, column=0, padx=10, pady=(20, 0), sticky="w")
+        self.mailing_btn.grid(row=7, column=0, padx=10,
+                              pady=(20, 0), sticky="w")
 
         # Modification button
         self.modification_btn = ctk.CTkButton(
@@ -262,9 +283,10 @@ class Dashboard(ctk.CTkToplevel):
             hover_color="#2e3532",
             fg_color="#31493c",
             cursor="hand2",
-            command=self.modification_func
+            command=self.modification_func,
         )
-        self.modification_btn.grid(row=8, column=0, padx=10, pady=(20, 0), sticky="w")
+        self.modification_btn.grid(
+            row=8, column=0, padx=10, pady=(20, 0), sticky="w")
 
         # Logout Button - FIXED
         self.logout_btn = ctk.CTkButton(
@@ -277,9 +299,10 @@ class Dashboard(ctk.CTkToplevel):
             hover_color="#2e3532",
             font=("Segoe UI", 10, "bold"),
             corner_radius=10,
-            command=self.close_app,  # FIXED: Changed to close_app
+            command=self.close_app,
         )
-        self.logout_btn.grid(row=9, column=0, padx=20, pady=(40, 0), sticky="w")
+        self.logout_btn.grid(row=9, column=0, padx=20,
+                             pady=(40, 0), sticky="w")
 
         # Main Content Frame
         self.main_frame = ctk.CTkFrame(
@@ -298,10 +321,12 @@ class Dashboard(ctk.CTkToplevel):
             self.master.destroy()
             # Force exit
             import sys
+
             sys.exit(0)
         except Exception as e:
             print(f"Error during logout: {e}")
             import sys
+
             sys.exit(0)
 
     def dashboard_content(self):
@@ -357,7 +382,8 @@ class Dashboard(ctk.CTkToplevel):
             fg_color="#31493c",
             corner_radius=30,
         )
-        self.total_book_frame.grid(column=1, row=0, padx=20, pady=20, sticky="nsew")
+        self.total_book_frame.grid(
+            column=1, row=0, padx=20, pady=20, sticky="nsew")
         self.total_book_frame.grid_columnconfigure(0, weight=1)
         self.total_book_frame.grid_rowconfigure(0, weight=1)
         self.total_book_frame.grid_rowconfigure(1, weight=1)
@@ -389,7 +415,8 @@ class Dashboard(ctk.CTkToplevel):
         self.issued_bookd_frame = ctk.CTkFrame(
             self.main_frame, fg_color="#31493c", corner_radius=30
         )
-        self.issued_bookd_frame.grid(column=2, row=0, padx=20, pady=20, sticky="nsew")
+        self.issued_bookd_frame.grid(
+            column=2, row=0, padx=20, pady=20, sticky="nsew")
         self.issued_bookd_frame.grid_columnconfigure(0, weight=1)
         self.issued_bookd_frame.grid_rowconfigure(0, weight=1)
         self.issued_bookd_frame.grid_rowconfigure(1, weight=1)
@@ -421,7 +448,8 @@ class Dashboard(ctk.CTkToplevel):
         self.return_book_frame = ctk.CTkFrame(
             self.main_frame, fg_color="#31493c", corner_radius=30
         )
-        self.return_book_frame.grid(column=3, row=0, padx=20, pady=20, sticky="nsew")
+        self.return_book_frame.grid(
+            column=3, row=0, padx=20, pady=20, sticky="nsew")
         self.return_book_frame.grid_columnconfigure(0, weight=1)
         self.return_book_frame.grid_rowconfigure(0, weight=1)
         self.return_book_frame.grid_rowconfigure(1, weight=1)
@@ -456,7 +484,9 @@ class Dashboard(ctk.CTkToplevel):
             corner_radius=30,
             height=220,
         )
-        self.graph_frame.grid(row=1, column=0, columnspan=3, padx=20, pady=(0, 20), sticky="nsew")
+        self.graph_frame.grid(
+            row=1, column=0, columnspan=3, padx=20, pady=(0, 20), sticky="nsew"
+        )
         self.graph_frame.grid_columnconfigure(0, weight=1)
         self.graph_frame.grid_rowconfigure(0, weight=1)
 
@@ -473,14 +503,17 @@ class Dashboard(ctk.CTkToplevel):
             if group in group_counts:
                 group_counts[group] = count
         groups = all_groups
-        counts = [group_counts.get(group, 0) for group in all_groups[:-1]] + [total_books]
+        counts = [group_counts.get(group, 0) for group in all_groups[:-1]] + [
+            total_books
+        ]
 
         # Create Matplotlib figure
         fig, ax = plt.subplots(figsize=(8, 3))
         bars = ax.bar(
             groups,
             counts,
-            color=["#4CAF50", "#2196F3", "#FF9800", "#F44336", "#9C27B0", "#795548"],
+            color=["#4CAF50", "#2196F3", "#FF9800",
+                   "#F44336", "#9C27B0", "#795548"],
             edgecolor="white",
             linewidth=0.5,
         )
@@ -536,7 +569,8 @@ class Dashboard(ctk.CTkToplevel):
         self.info_frame = ctk.CTkFrame(
             self.main_frame, fg_color="#31493c", corner_radius=10, height=150
         )
-        self.info_frame.grid(row=1, column=3, padx=20, pady=(0, 20), sticky="nsew")
+        self.info_frame.grid(row=1, column=3, padx=20,
+                             pady=(0, 20), sticky="nsew")
         self.info_frame.grid_columnconfigure(0, weight=1)
         self.info_frame.grid_rowconfigure(0, weight=1)
         self.info_frame.grid_rowconfigure(1, weight=1)
@@ -569,7 +603,9 @@ class Dashboard(ctk.CTkToplevel):
             fg_color="#31493c",
             corner_radius=10,
         )
-        self.layer_frame1.grid(row=0, column=0, sticky="nsew", padx=15, pady=15, columnspan=5, rowspan=2)
+        self.layer_frame1.grid(
+            row=0, column=0, sticky="nsew", padx=15, pady=15, columnspan=5, rowspan=2
+        )
         StudentRecord(self.layer_frame1)
 
     def student_book(self):
@@ -580,7 +616,9 @@ class Dashboard(ctk.CTkToplevel):
             fg_color="#31493c",
             corner_radius=10,
         )
-        self.layer_frame2.grid(row=0, column=0, sticky="nsew", padx=15, pady=15, columnspan=5, rowspan=2)
+        self.layer_frame2.grid(
+            row=0, column=0, sticky="nsew", padx=15, pady=15, columnspan=5, rowspan=2
+        )
         Books(self.layer_frame2)
 
     def issue_return_func(self):
@@ -591,7 +629,9 @@ class Dashboard(ctk.CTkToplevel):
             fg_color="#31493c",
             corner_radius=10,
         )
-        self.layer_frame3.grid(row=0, column=0, sticky="nsew", padx=15, pady=15, columnspan=5, rowspan=2)
+        self.layer_frame3.grid(
+            row=0, column=0, sticky="nsew", padx=15, pady=15, columnspan=5, rowspan=2
+        )
         IssueReturn(self.layer_frame3)
 
     def transaction_func(self):
@@ -602,7 +642,9 @@ class Dashboard(ctk.CTkToplevel):
             fg_color="#31493c",
             corner_radius=10,
         )
-        self.layer_frame4.grid(row=0, column=0, sticky="nsew", padx=15, pady=15, columnspan=5, rowspan=2)
+        self.layer_frame4.grid(
+            row=0, column=0, sticky="nsew", padx=15, pady=15, columnspan=5, rowspan=2
+        )
         Transaction(self.layer_frame4)
 
     def reports_func(self):
@@ -613,7 +655,9 @@ class Dashboard(ctk.CTkToplevel):
             fg_color="#31493c",
             corner_radius=10,
         )
-        self.layer_frame5.grid(row=0, column=0, sticky="nsew", padx=15, pady=15, columnspan=5, rowspan=2)
+        self.layer_frame5.grid(
+            row=0, column=0, sticky="nsew", padx=15, pady=15, columnspan=5, rowspan=2
+        )
         Reports(self.layer_frame5)
 
     def mailing_func(self):
@@ -624,9 +668,11 @@ class Dashboard(ctk.CTkToplevel):
             fg_color="#31493c",
             corner_radius=10,
         )
-        self.mailing_frame.grid(row=0, column=0, sticky="nsew", padx=15, pady=15, columnspan=5, rowspan=2)
+        self.mailing_frame.grid(
+            row=0, column=0, sticky="nsew", padx=15, pady=15, columnspan=5, rowspan=2
+        )
         Mailing(self.mailing_frame)
-        
+
     def modification_func(self):
         for widgets in self.main_frame.winfo_children():
             widgets.destroy()
@@ -635,56 +681,93 @@ class Dashboard(ctk.CTkToplevel):
             fg_color="#31493c",
             corner_radius=10,
         )
-        self.layer_frame_mod.grid(row=0, column=0, sticky="nsew", padx=15, pady=15, columnspan=5, rowspan=2)
+        self.layer_frame_mod.grid(
+            row=0, column=0, sticky="nsew", padx=15, pady=15, columnspan=5, rowspan=2
+        )
         from Modification import Modification
+
         Modification(self.layer_frame_mod)
 
     def images(self):
         try:
-            logo = Image.open("Assets/Ideal-College.png")
-            self.logo_img = ctk.CTkImage(light_image=logo, dark_image=logo, size=(185, 140))
+            logo = Image.open(resource_path("Assets/Ideal-College.png"))
+            self.logo_img = ctk.CTkImage(
+                light_image=logo, dark_image=logo, size=(185, 140)
+            )
 
-            logout = Image.open("Assets/logout.png")
-            self.logout = ctk.CTkImage(light_image=logout, dark_image=logout, size=(30, 30))
+            logout = Image.open(resource_path("Assets/logout.png"))
+            self.logout = ctk.CTkImage(
+                light_image=logout, dark_image=logout, size=(30, 30)
+            )
 
-            dashicon = Image.open("Assets/icons8-home-24.png")
-            self.dashicon = ctk.CTkImage(light_image=dashicon, dark_image=dashicon, size=(24, 24))
+            dashicon = Image.open(resource_path("Assets/icons8-home-24.png"))
+            self.dashicon = ctk.CTkImage(
+                light_image=dashicon, dark_image=dashicon, size=(24, 24)
+            )
 
-            stduent_rec = Image.open("Assets/student_records.png")
-            self.student_record = ctk.CTkImage(light_image=stduent_rec, dark_image=stduent_rec, size=(30, 30))
+            stduent_rec = Image.open(
+                resource_path("Assets/student_records.png"))
+            self.student_record = ctk.CTkImage(
+                light_image=stduent_rec, dark_image=stduent_rec, size=(30, 30)
+            )
 
-            book = Image.open("Assets/open-book.png")
-            self.book = ctk.CTkImage(light_image=book, dark_image=book, size=(30, 30))
+            book = Image.open(resource_path("Assets/open-book.png"))
+            self.book = ctk.CTkImage(
+                light_image=book, dark_image=book, size=(30, 30))
 
-            issue = Image.open("Assets/return-box.png")
-            self.issue_return = ctk.CTkImage(light_image=issue, dark_image=issue, size=(30, 30))
+            issue = Image.open(resource_path("Assets/return-box.png"))
+            self.issue_return = ctk.CTkImage(
+                light_image=issue, dark_image=issue, size=(30, 30)
+            )
 
-            transaction = Image.open("Assets/transaction-history.png")
-            self.transaction_list = ctk.CTkImage(light_image=transaction, dark_image=transaction, size=(30, 30))
+            transaction = Image.open(resource_path(
+                "Assets/transaction-history.png"))
+            self.transaction_list = ctk.CTkImage(
+                light_image=transaction, dark_image=transaction, size=(30, 30)
+            )
 
-            reports = Image.open("Assets/report.png")
-            self.reports = ctk.CTkImage(light_image=reports, dark_image=reports, size=(30, 30))
+            reports = Image.open(resource_path("Assets/report.png"))
+            self.reports = ctk.CTkImage(
+                light_image=reports, dark_image=reports, size=(30, 30)
+            )
 
-            mail = Image.open("Assets/mail.png")
-            self.mail = ctk.CTkImage(light_image=mail, dark_image=mail, size=(30, 30))
+            mail = Image.open(resource_path("Assets/mail.png"))
+            self.mail = ctk.CTkImage(
+                light_image=mail, dark_image=mail, size=(30, 30))
 
-            modification = Image.open("Assets/modification.png")
-            self.modification_img = ctk.CTkImage(light_image=modification, dark_image=modification, size=(30, 30))
+            modification = Image.open(resource_path("Assets/modification.png"))
+            self.modification_img = ctk.CTkImage(
+                light_image=modification, dark_image=modification, size=(
+                    30, 30)
+            )
 
-            students = Image.open("Assets/students.png")
-            self.students = ctk.CTkImage(light_image=students, dark_image=students, size=(100, 100))
+            students = Image.open(resource_path("Assets/students.png"))
+            self.students = ctk.CTkImage(
+                light_image=students, dark_image=students, size=(100, 100)
+            )
 
-            return_book = Image.open("Assets/return-book.png")
-            self.return_book = ctk.CTkImage(light_image=return_book, dark_image=return_book, size=(100, 100))
+            return_book = Image.open(resource_path("Assets/return-book.png"))
+            self.return_book = ctk.CTkImage(
+                light_image=return_book, dark_image=return_book, size=(
+                    100, 100)
+            )
 
-            inword_books = Image.open("Assets/inword.png")
-            self.inword_books = ctk.CTkImage(light_image=inword_books, dark_image=inword_books, size=(80, 80))
+            inword_books = Image.open(resource_path("Assets/inword.png"))
+            self.inword_books = ctk.CTkImage(
+                light_image=inword_books, dark_image=inword_books, size=(
+                    80, 80)
+            )
 
-            outword = Image.open("Assets/outword.png")
-            self.outword_img = ctk.CTkImage(light_image=outword, dark_image=outword, size=(80, 80))
+            outword = Image.open(resource_path("Assets/outword.png"))
+            self.outword_img = ctk.CTkImage(
+                light_image=outword, dark_image=outword, size=(80, 80)
+            )
 
-            totoal_books = Image.open("Assets/open-book.png")
-            self.total_books_img = ctk.CTkImage(light_image=totoal_books, dark_image=totoal_books, size=(100, 100))
+            total_books = Image.open(resource_path("Assets/open-book.png"))
+            self.total_books_img = ctk.CTkImage(
+                light_image=total_books, dark_image=total_books, size=(
+                    100, 100)
+            )
         except Exception as e:
             print(f"Error loading images: {e}")
 
@@ -706,3 +789,4 @@ class Dashboard(ctk.CTkToplevel):
             '"Time waits for no one." - Geoffrey Chaucer',
         ]
         return rand.choice(education_quotes)
+

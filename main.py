@@ -7,6 +7,15 @@ from Dashboard import Dashboard
 from Database import Database
 
 
+def resource_path(relative_path):
+    """Get absolute path to resource, works for dev and PyInstaller"""
+    try:
+        base_path = sys._MEIPASS  # Temp folder for bundled assets
+    except AttributeError:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
+
+
 class App(ctk.CTk):
     ctk.set_window_scaling(1.0)
     ctk.set_widget_scaling(1.0)
@@ -18,16 +27,10 @@ class App(ctk.CTk):
         self.resizable(False, False)
         self.config(background="#590d22")
         try:
-            if getattr(sys, "frozen", False):
-                application_path = sys._MEIPASS
-            else:
-                application_path = os.path.dirname(os.path.abspath(__file__))
-
-            icon_path = os.path.join(
-                application_path, "Assets/Ideal-College.ico")
+            icon_path = resource_path("Assets/Ideal-College.ico")
             self.iconbitmap(icon_path)
-        except:
-            pass
+        except Exception as e:
+            print(f"Error setting icon: {e}")
         self.create_widgets()
         self.center()
 
@@ -84,7 +87,7 @@ class App(ctk.CTk):
             self.login_frame,
             text="Username",
             text_color="white",
-            font=("Segoe UI", 15, "bold"),  # Fixed font consistency
+            font=("Segoe UI", 15, "bold"),
         )
         self.username_label.grid(
             row=1, column=0, pady=(10, 0), sticky="w", padx=30)
@@ -98,7 +101,7 @@ class App(ctk.CTk):
             text_color="white",
             height=35,
             corner_radius=20,
-            font=("Segoe UI", 15, "bold"),  # Fixed font consistency
+            font=("Segoe UI", 15, "bold"),
         )
         self.username_enty.grid(row=2, column=0, padx=30,
                                 pady=(5, 10), sticky="ew")
@@ -108,7 +111,7 @@ class App(ctk.CTk):
             self.login_frame,
             text="Password",
             text_color="white",
-            font=("Segoe UI", 15, "bold"),  # Fixed font consistency
+            font=("Segoe UI", 15, "bold"),
         )
         self.password_label.grid(
             row=3, column=0, pady=(10, 0), sticky="w", padx=30)
@@ -123,7 +126,7 @@ class App(ctk.CTk):
             height=35,
             corner_radius=20,
             show="*",
-            font=("Segoe UI", 15, "bold"),  # Fixed font consistency
+            font=("Segoe UI", 15, "bold"),
         )
         self.password_entry.grid(
             row=4, column=0, padx=30, pady=(5, 10), sticky="ew")
@@ -136,7 +139,7 @@ class App(ctk.CTk):
             hover_color="#a4133c",
             cursor="hand2",
             width=230,
-            font=("Segoe UI", 15, "bold"),  # Fixed font consistency
+            font=("Segoe UI", 15, "bold"),
             height=35,
             corner_radius=20,
             command=self.authentication,
@@ -164,7 +167,8 @@ class App(ctk.CTk):
         self.quit()
 
     def load_images(self):
-        img = Image.open("Assets/Ideal-College.png").resize((280, 190))
+        img_path = resource_path("Assets/Ideal-College.png")
+        img = Image.open(img_path).resize((280, 190))
         self.logo = ImageTk.PhotoImage(img)
 
 
